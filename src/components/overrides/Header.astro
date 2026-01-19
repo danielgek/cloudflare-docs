@@ -1,6 +1,5 @@
 ---
 import LanguageSelect from "@astrojs/starlight/components/LanguageSelect.astro";
-import DocSearch from "@astrojs/starlight-docsearch/DocSearch.astro";
 import SiteTitle from "@astrojs/starlight/components/SiteTitle.astro";
 import ThemeSelect from "@astrojs/starlight/components/ThemeSelect.astro";
 
@@ -10,15 +9,45 @@ import HeaderDropdowns from "../HeaderDropdowns.tsx";
 <div class="flex h-full items-center justify-between gap-4">
 	<SiteTitle />
 	<div class="flex gap-8">
-		<div id="docsearch">
-			<DocSearch />
+		<div>
+			<button
+				type="button"
+				aria-label="Search (Meta+k)"
+				aria-keyshortcuts="Meta+k"
+				class="snippet-search-button"
+				data-snippet-trigger-button
+			>
+				<span>
+					<svg
+						width="20"
+						height="20"
+						viewBox="0 0 20 20"
+						aria-hidden="true"
+						class="snippet-search-button-icon"
+					>
+						<path
+							d="M14.386 14.386l4.0877 4.0877-4.0877-4.0877c-2.9418 2.9419-7.7115 2.9419-10.6533 0-2.9419-2.9418-2.9419-7.7115 0-10.6533 2.9418-2.9419 7.7115-2.9419 10.6533 0 2.9419 2.9418 2.9419 7.7115 0 10.6533z"
+							stroke="currentColor"
+							fill="none"
+							fill-rule="evenodd"
+							stroke-linecap="round"
+							stroke-linejoin="round"></path>
+					</svg>
+					<span class="snippet-search-button-placeholder">Search</span>
+				</span>
+				<span class="snippet-search-button-keys">
+					<kbd>⌘</kbd>
+					<kbd>K</kbd>
+				</span>
+			</button>
 		</div>
+
 		<div id="right-group" class="hidden h-10 flex-wrap gap-x-2 overflow-hidden">
 			<HeaderDropdowns client:idle />
 			<a
 				id="header-login-button"
 				href="https://dash.cloudflare.com/"
-				class="mr-2 flex items-center justify-center rounded-sm bg-cl1-brand-orange px-6 font-medium text-cl1-black no-underline"
+				class="bg-cl1-brand-orange text-cl1-black mr-2 flex items-center justify-center rounded-sm px-6 font-medium no-underline"
 			>
 				Log in
 			</a>
@@ -27,7 +56,9 @@ import HeaderDropdowns from "../HeaderDropdowns.tsx";
 		</div>
 	</div>
 </div>
-
+<search-modal-snippet
+	api-url="https://b5c27826-0837-4df5-b213-5814807a0bb1.search.ai.cloudflare.com/"
+></search-modal-snippet>
 <style>
 	:global(.site-title) {
 		gap: 0.5rem;
@@ -43,30 +74,97 @@ import HeaderDropdowns from "../HeaderDropdowns.tsx";
 		}
 	}
 
+	.snippet-search-button {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		border: 0;
+		background-color: transparent;
+		color: var(--sl-color-gray-1);
+		cursor: pointer;
+		height: 2.5rem;
+		font-size: var(--sl-text-xl);
+		justify-content: end;
+	}
+
+	search-modal-snippet {
+		--search-snippet-background: var(--sl-color-bg);
+		--search-snippet-surface: var(--sl-color-bg-nav);
+		--search-snippet-primary-color: #f6821f;
+		--search-snippet-primary-hover: #e5750f;
+		--search-snippet-focus-ring: rgba(246, 130, 31, 0.25);
+		
+		--search-snippet-border-radius: 0.5rem;
+	}
+
+	.snippet-search-button-icon {
+		width: 0.875em;
+		height: 0.875em;
+		stroke-width: 0.125rem;
+	}
+
+	.snippet-search-button-placeholder {
+		display: none;
+	}
+
+	.snippet-search-button-keys kbd {
+		display: none;
+		font-size: 0.75em;
+		font-weight: 600;
+		opacity: 0.8;
+		border: 1px solid var(--sl-color-gray-4);
+		border-radius: 0.25rem;
+		padding: 0.125rem 0.375rem;
+		background-color: var(--sl-color-gray-6);
+		color: var(--sl-color-gray-1);
+		line-height: 1;
+	}
+	@media (min-width: 50rem) {
+		.snippet-search-button {
+			border: 1px solid var(--sl-color-gray-5);
+			border-radius: 0.5rem;
+			padding-inline-start: 0.75rem;
+			padding-inline-end: 1rem;
+			background-color: var(--sl-color-black);
+			color: var(--sl-color-gray-2);
+			font-size: var(--sl-text-sm);
+			max-width: 22rem;
+			width: 100%;
+			justify-content: space-between;
+		}
+		.snippet-search-button-placeholder {
+			display: inline-block;
+		}
+
+		.snippet-search-button-keys kbd {
+			display: inline-block;
+		}
+	}
+
 	#social-icons {
 		--sl-icon-color: var(--sl-color-white);
 	}
 
 	:global(starlight-theme-select > label > select) {
-        line-height: 1.25rem;
-        margin: 1px 1px;
-    }
+		line-height: 1.25rem;
+		margin: 1px 1px;
+	}
 
-    :global(
-        starlight-theme-select > label > select:focus,
-        starlight-theme-select > label > select:focus-visible
-    ) {
-        margin: 1px 1px;
-        outline-offset: -4px;
-    }
+	:global(
+		starlight-theme-select > label > select:focus,
+		starlight-theme-select > label > select:focus-visible
+	) {
+		margin: 1px 1px;
+		outline-offset: -4px;
+	}
 
-    :global(starlight-theme-select > label > .label-icon) {
-        left: 8%;
-    }
+	:global(starlight-theme-select > label > .label-icon) {
+		left: 8%;
+	}
 
-    :global(starlight-theme-select > label > .caret) {
-        left: 75%;
-    }
+	:global(starlight-theme-select > label > .caret) {
+		left: 75%;
+	}
 
 	@media screen and (min-width: 800px) {
 		#right-group {
@@ -87,4 +185,25 @@ import HeaderDropdowns from "../HeaderDropdowns.tsx";
 		?.addEventListener("click", () => {
 			track("clicked header login button");
 		});
+	document
+		.querySelector("[data-snippet-trigger-button]")
+		?.addEventListener("click", () => {
+			const snippet = document.querySelector("search-modal-snippet");
+			if (snippet) {
+				(snippet as unknown as { open: () => void }).open();
+			}
+		});
+
+	const observer = new MutationObserver(() => {
+		const theme = document.documentElement.dataset.theme;
+		const snippet = document.querySelector("search-modal-snippet");
+		if (snippet && theme) {
+			snippet.setAttribute("theme", theme);
+		}
+	});
+
+	observer.observe(document.documentElement, {
+		attributes: true,
+		attributeFilter: ["data-theme"],
+	});
 </script>

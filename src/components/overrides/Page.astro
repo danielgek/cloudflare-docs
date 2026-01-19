@@ -63,9 +63,36 @@ if (data.reviewed) {
 ---
 
 <Default set:html={html} />
+<chat-bubble-snippet
+	api-url="https://b5c27826-0837-4df5-b213-5814807a0bb1.search.ai.cloudflare.com/"
+></chat-bubble-snippet>
 
 <style>
 	html:not([data-has-toc]) {
 		--sl-content-width: 67.5rem;
 	}
+
+	chat-bubble-snippet {
+		--search-snippet-background: var(--sl-color-bg);
+		--search-snippet-surface: var(--sl-color-bg-nav);
+		--search-snippet-primary-color: #f6821f;
+		--search-snippet-primary-hover: #e5750f;
+		--search-snippet-focus-ring: rgba(246, 130, 31, 0.25);
+
+		--search-snippet-border-radius: 0.5rem;
+	}
 </style>
+<script>
+	const observer = new MutationObserver(() => {
+		const theme = document.documentElement.dataset.theme;
+		const snippet = document.querySelector("chat-bubble-snippet");
+		if (snippet && theme) {
+			snippet.setAttribute("theme", theme);
+		}
+	});
+
+	observer.observe(document.documentElement, {
+		attributes: true,
+		attributeFilter: ["data-theme"],
+	});
+</script>
